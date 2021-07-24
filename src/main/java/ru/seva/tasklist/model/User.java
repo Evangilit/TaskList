@@ -26,8 +26,7 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Set<Role> roles;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "user_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private List<Task> tasks;
 
     @Override

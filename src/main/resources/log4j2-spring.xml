@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="TaskListApp" packages="">
+
+    <Properties>
+        <Property name="ServerLogFileName">log/server-log.log</Property>
+        <Property name="Controller">log/controller-log.log</Property>
+        <Property name="Service">log/service-log.log</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+
+        <RollingFile name="ServerLog" fileName="${ServerLogFileName}" filePattern="${ServerLogFileName}-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="50 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+
+        <RollingFile name="Controller" fileName="${Controller}" filePattern="${Controller}-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="Service" fileName="${Service}" filePattern="${Service}-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="error">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="ServerLog"/>
+        </Root>
+
+        <Logger name="ru.seva.tasklist" level="trace">
+            <AppenderRef ref="ServerLog"/>
+        </Logger>
+
+        <Logger name="ru.seva.tasklist.controller" level="trace">
+            <AppenderRef ref="Controller"/>
+        </Logger>
+
+        <Logger name="ru.seva.tasklist.service" level="trace">
+            <AppenderRef ref="Service"/>
+        </Logger>
+    </Loggers>
+
+</Configuration>

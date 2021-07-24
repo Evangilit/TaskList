@@ -1,5 +1,7 @@
 package ru.seva.tasklist.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ import java.util.Map;
 @Controller
 public class MainController {
 
+    public static Logger log = LoggerFactory.getLogger(MainController.class);
+
     @Autowired
     private TaskService taskService;
 
@@ -27,9 +31,7 @@ public class MainController {
     }
 
     @GetMapping("/main")
-    public String main(
-            @AuthenticationPrincipal User user,
-            Map<String, Object> model){
+    public String main(@AuthenticationPrincipal User user, Map<String, Object> model){
         Iterable<Task> tasks = taskService.findByAuthorName(user.getUsername());
         model.put("tasks", tasks);
         return "main";
@@ -46,8 +48,8 @@ public class MainController {
             @RequestParam(name = "target", required = true, defaultValue = "none") String target,
             @RequestParam(name = "description", required = true, defaultValue = "none") String description,
             @RequestParam(name = "date", required = true, defaultValue = "none") Date date,
-            Map<String, Object> model)
-    {
+            Map<String, Object> model) {
+        log.info("Request to add task for user {}", user.getUsername());
         Task task = taskService.findByTargetAndAuthor(target, user.getUsername());
         if (task != null){
             model.put("exist", "Such target already exists");
@@ -59,10 +61,7 @@ public class MainController {
     }
 
     @GetMapping("/edittask/{id}")
-    public String editPage(
-            @PathVariable("id") Long id,
-            Map<String, Object> model)
-    {
+    public String editPage(@PathVariable("id") Long id, Map<String, Object> model) {
         model.put("id", id);
         return "/edittask";
     }
@@ -72,8 +71,8 @@ public class MainController {
             @RequestParam(name = "id") Long id,
             @RequestParam(name = "target", required = true, defaultValue = "none") String target,
             @RequestParam(name = "description", required = true, defaultValue = "none") String description,
-            @RequestParam(name = "date", required = true, defaultValue = "none") Date date)
-    {
+            @RequestParam(name = "date", required = true, defaultValue = "none") Date date) {
+        log.info("Request for edit a task: id = {}, target = {}", id, target);
         Task task = taskService.findById(id);
         task.setTarget(target);
         task.setDescription(description);
@@ -85,7 +84,7 @@ public class MainController {
     @GetMapping("/deletetask/{id}")
     public ModelAndView delete(
             @AuthenticationPrincipal User user,
-            @PathVariable(name = "id") Long id){
+            @PathVariable(name = "id") Long id) {
         Task task = taskService.findById(id);
         taskService.delete(task);
         ModelAndView modelAndView = new ModelAndView();

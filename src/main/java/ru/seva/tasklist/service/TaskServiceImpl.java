@@ -1,5 +1,7 @@
 package ru.seva.tasklist.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.seva.tasklist.model.Task;
@@ -10,6 +12,8 @@ import java.util.Optional;
 
 @Service
 public class TaskServiceImpl implements TaskService {
+
+    public static Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     @Autowired
     private TaskRepo taskRepo;
@@ -52,11 +56,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void delete(Task task) {
+        log.warn("Deleting task {}", task.getTarget());
         taskRepo.delete(task);
     }
 
     @Override
     public void delete(String target) {
+        log.warn("Deleting task {}", target);
         Task task = findByTarget(target);
         taskRepo.delete(task);
     }

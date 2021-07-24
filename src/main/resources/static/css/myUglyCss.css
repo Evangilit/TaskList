@@ -30,9 +30,16 @@ label {
 div{
     color: black;
 }
-a, button, p{
+a, p{
     display: block;
     text-align: center;
+    margin: auto;
+}
+
+button{
+    width: 100px;
+    text-align: center;
+    margin: auto;
 }
 
 .Center {
